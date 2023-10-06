@@ -1,0 +1,139 @@
+Application: Tabulkový editor
+
+Budu implementovat jednoduchý tabulkový editor (spreadsheet) v terminálu. Tabulka se skládá z buněk, ve kterých jsou uloženy hodnoty nebo jiné výrazy, a tyto buňky je možné následně využívat v jiných buňkách.
+
+
+Tabulkový editor bude implementovat následující funkcionality:
+
+- Práce s čísly a řetězci.
+- Základní číselné operace: sčítání, odčítání, násobení, dělení.
+- Základní operace nad řetězci: spojení dvou řetězců, opakování řetězce.
+- Jednoduché funkce: sin, cos, pad, avg, pow, log2, ln, log10.
+- Buňky v sobě mohou mít uloženou hodnotu nebo vzorec:
+    - V případě vzorce se aktualizuje obsah na základě změn v odkazovaných buňkách.
+    - Stejně tak program detektuje cykly a nedovolí vytvořit výraz, který by cyklus způsobil.
+- Příkazy pro práci s editorem: help, oplist, maxsize, create, currsize, import, formula, print, =, export, exit
+
+
+Interface editoru bude implementovat následující funkcionality:
+
+- Vizualizace tabulky a její hodnoty:
+    - Jde vypsat celou tabulku do terminálu.
+    - Maximální rozměry tabulky jsou konstantou.
+- Je zavedena možnost scrollingu v tabulce pomocí kláves 'a' a 'd':
+    - Jedno stisknutí posune tabulku o jeden sloupec.
+    - Zápis textu, čísel a vzorců do buněk pomocí znaku '='.
+    - Uložení aktuální tabulky (tedy jejích buněk) do souboru v čitelné podobě pomocí příkazu export.
+    - Obnovení uloženého stavu tabulky ze souboru pomocí příkazu import (včetně definovaných vzorců).
+
+
+Aplikace bude umět zpracovávat výrazy dle následujícího principu:
+
+- Operace (sčítání, odčítání, násobení, dělení, spojení řetězců a opakování řetězce) je možné vnořovat pomocí závorek. Například: ( "w" . A3 ) + ".cvut.cz"
+- Závorky mohou být libovolně vnořené.
+- Jednoduché funkce (sin, cos, abs, pad, avg) se volají jako běžné funkce. Například: avg ( 12 , 50 )
+- Musí však být jeden mezerový znak mezi tokeny - tedy ne avg(12, 50)
+
+
+Popis operatorů:
+
+Operator name: +
+Description: addition with arity 2
+Store arguments as: as-is
+
+Operator name: -
+Description: subtraction with arity 2
+Store arguments as: as-is
+
+Operator name: *
+Description: multiplication with arity 2
+Store arguments as: as-is
+
+Operator name: /
+Description: division with arity 2
+Store arguments as: as-is
+
+Operator name: +
+Description: concatenation with arity 2
+Store arguments as: in quotes
+
+Operator name: .
+Description: repetition with arity 2
+Store arguments as: in quotes
+
+Operator name: sin
+Description: sine with arity 1
+Store arguments as: as-is
+
+Operator name: cos
+Description: cosine with arity 1
+Store arguments as: as-is
+
+Operator name: log2
+Description: logarithm of base 2 with arity 1
+Store arguments as: as-is
+
+Operator name: log10
+Description: logarithm of base 10 with arity 1
+Store arguments as: as-is
+
+Operator name: ln
+Description: logarithm of base e with arity 1
+Store arguments as: as-is
+
+Operator name: avg
+Description: average with multinary arity
+Store arguments as: as-is
+
+Operator name: padl
+Description: padding left with arity 3
+Store arguments as: 1. in quotes, 2. as-is, 3. in single quotes
+
+Operator name: padr
+Description: padding right with arity 3
+Store arguments as: 1. in quotes, 2. as-is, 3. in single quotes
+
+- PI: konstanta pí.
+- EXP: konstanta e.
+
+
+Popis příkazů:
+
+help
+Displays this help message.
+
+oplist
+Displays the list of supported operators.
+
+maxsize
+Displays the maximum size of the table available.
+
+currsize
+Displays the size of the current table.
+
+create <NUMBER_OF_COLUMNS> <NUMBER_OF_ROWS>
+Creates a new table with the specified number of columns and rows.
+
+import <FILE_NAME>
+Imports a table from the specified file.
+
+<CELL_INDEX> = <EXPRESSION>
+Assigns a value to the specified cell.
+
+formula <CELL_INDEX> / <CELL_RANGE>
+Displays a formula of the specified cell / range.
+
+print <CELL_INDEX> / <CELL_RANGE>
+Displays a value of the specified cell / range.
+
+export <FILE_NAME>
+Exports a formula to the specified file.
+
+exit
+Exits the program.
+
+Notes:
+- <CELL_INDEX> is a string combined by the column letter and the row number representing a cell index. The column letter represents the vertical columns in the spreadsheet identified by letters from A to Z and beyond. The row number represents the horizontal rows starting from 1 and increasing as moving down the spreadsheet.
+- <CELL_RANGE> is a string combined by two cell indices separated by ':' representing a range of cells.
+- <FILE_NAME> is a string enclosed in double quotes representing a file name.
+- <EXPRESSION> represents a mathematical expression or string manipulation using real numbers, <STRING> and operators listed in oplist
