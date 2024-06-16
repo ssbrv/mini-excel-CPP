@@ -191,17 +191,13 @@ std::vector<std::string> formatTable(const std::vector<std::vector<std::string>>
         size_t max_length = 0;
 
         for (auto &cell : *columnIt)
-        {
             if (cell.length() > max_length)
                 max_length = cell.length();
-        }
+        
+        std::string cellClosing = (columnIt == table.end() - 1) ? "" : std::string(padding, ' ') + delimeter + std::string(padding, ' ');
 
-        if (columnIt == table.end() - 1)
-            for (size_t i = 0; i < columnIt->size(); ++i)
-                formattedTable[i] += (*columnIt)[i] + std::string(max_length - (*columnIt)[i].length(), ' ');
-        else
-            for (size_t i = 0; i < columnIt->size(); ++i)
-                formattedTable[i] += (*columnIt)[i] + std::string(max_length - (*columnIt)[i].length(), ' ') + std::string(padding, ' ') + delimeter + std::string(padding, ' ');
+        for (size_t i = 0; i < columnIt->size(); ++i)
+            formattedTable[i] += (*columnIt)[i] + std::string(max_length - (*columnIt)[i].length(), ' ') + cellClosing;
     }
 
     return formattedTable;
